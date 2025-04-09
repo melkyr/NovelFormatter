@@ -1,5 +1,5 @@
 # NovelFormatter
-Migrations:
+Migrations: NovelFormatter.sql
 
 # Podman to run the MariaDB instance (sample code)
 ## podman run -d --name mariadb_container -e MYSQL_ROOT_PASSWORD=rootpassword -e MYSQL_DATABASE=mydatabase -e MYSQL_USER=myuser -e MYSQL_PASSWORD=mypassword -p 3306:3306 -v /mnt/f/MariaDB:/var/lib/mysql mariadb:latest
