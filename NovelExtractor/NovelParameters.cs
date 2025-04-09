@@ -8,6 +8,7 @@ namespace NovelExtractor
 {
     public  class NovelParameters
     {
+        //Sample data
         public string NovelPath = "F:\\Arankparty";
         public  string NovelFileName = "novel.txt";
         public string OutputDirectory = "F:\\Arankparty\\output";
