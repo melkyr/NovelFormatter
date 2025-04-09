@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NovelExtractor.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ namespace NovelExtractor
         private readonly NovelFileReader _reader;
         private readonly NovelFileWriter _writer;
         private readonly ChapterExtractor _extractor;
+        private readonly ChapterMessageProducer _messageProducer;
 
         public Processor(NovelParameters parameters, SplitterStatus status)
         {
@@ -22,9 +24,10 @@ namespace NovelExtractor
             _reader = new NovelFileReader(_parameters.NovelPath, _parameters.NovelFileName);
             _writer = new NovelFileWriter(_parameters.OutputDirectory);
             _extractor = new ChapterExtractor(_parameters, _status);
+            _messageProducer = new ChapterMessageProducer("localhost", "novel_processor_queue");
         }
 
-        public void ProcessText()
+        public async Task ProcessText()
         {
             Console.WriteLine("Starting processing...");
             foreach (var line in _reader.ReadLines())
@@ -39,8 +42,10 @@ namespace NovelExtractor
                         break;
 
                     case SplitterStatus.Status.EndingChapter:
+                        string chapterContent = _extractor.GetChapterContent();
                         Console.WriteLine($"Finishing chapter {_status.CurrentChapter}");
-                        _writer.WriteFile(_status.CurrentFileName, _extractor.GetChapterContent());
+                        _writer.WriteFile(_status.CurrentFileName, chapterContent);
+                        await _messageProducer.PublishChapter(_status.CurrentVolume, _status.CurrentChapter, chapterContent);
                         _status.CurrentStatus = SplitterStatus.Status.Idle;
                         _extractor.ClearChapterContent();
                         break;

@@ -73,3 +73,28 @@ CREATE TABLE IF NOT EXISTS `volumes` (
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+
+-- First, drop the existing constraint
+ALTER TABLE `chapters` DROP FOREIGN KEY `chapters_ibfk_2`;
+
+-- Then, re-add with proper ON DELETE action
+ALTER TABLE `chapters` 
+  ADD CONSTRAINT `chapters_ibfk_2` 
+  FOREIGN KEY (`volume_id`) 
+  REFERENCES `volumes` (`volume_id`) 
+  ON DELETE SET NULL;
+  ALTER TABLE `volumes` DROP FOREIGN KEY `volumes_ibfk_1`;
+
+ALTER TABLE `volumes`
+  ADD CONSTRAINT `volumes_ibfk_1`
+  FOREIGN KEY (`novel_id`)
+  REFERENCES `novels` (`novel_id`)
+  ON DELETE CASCADE;
+  
+  ALTER TABLE `chapters` DROP FOREIGN KEY `chapters_ibfk_1`;
+
+ALTER TABLE `chapters`
+  ADD CONSTRAINT `chapters_ibfk_1`
+  FOREIGN KEY (`novel_id`)
+  REFERENCES `novels` (`novel_id`)
+  ON DELETE CASCADE;

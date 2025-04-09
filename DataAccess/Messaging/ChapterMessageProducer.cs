@@ -1,9 +1,6 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
+
 
 namespace NovelExtractor.Messaging
 {
@@ -14,8 +11,6 @@ namespace NovelExtractor.Messaging
         private const string ExchangeName = "novel.chapters"; // Must match the producer
         private string _queueName = string.Empty; // Will be assigned by RabbitMQ or set manually
         private string? _consumerTag;
-
-        public event EventHandler<string>? MessageReceived; // Event to notify about received messages
 
         public ChapterMessageProducer(string hostname = "localhost", string? queueName = null, string bindingKey = "vol.#")
         {
@@ -66,6 +61,26 @@ namespace NovelExtractor.Messaging
 
             Console.WriteLine($"[*] Queue '{_queueName}' bound to exchange '{ExchangeName}' with binding key '{bindingKey}'");
         }
+
+        public async Task PublishChapter(int volume, int chapter, string text)
+        {
+            var routingKey = $"vol.{volume}.chapter.{chapter}";
+            var body = Encoding.UTF8.GetBytes(text);
+
+            var props = new BasicProperties();
+            props.Persistent = true; // Mark messages as persistent
+
+            await _channel.BasicPublishAsync(
+                exchange: ExchangeName,
+                routingKey: routingKey,
+                mandatory: true,
+                basicProperties: props,
+                body: body
+            );
+
+            Console.WriteLine($"[Producer] Published '{routingKey}' ({body.Length} bytes)");
+        }
+
 
         public ValueTask DisposeAsync()
         {

@@ -1,14 +1,20 @@
 ﻿using System;
-using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading;
 using DataAccess.Data;
 using DataAccess.Interfaces;
+using DataAccess.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NovelExtractor;
+using NovelExtractor.Messaging; // Make sure the namespace matches
+using NovelPublisher;
+using static System.Net.Mime.MediaTypeNames;
 
-class Program
+public class Program
 {
-    static async Task Main(string[] args)
+    
+
+    public static async Task Main(string[] args)
     {
         // Set up Configuration
         IConfiguration configuration = new ConfigurationBuilder()
@@ -23,17 +29,16 @@ class Program
             .AddSingleton<INovelRepository, NovelRepository>()
             .AddSingleton<IVolumeRepository, VolumeRepository>()
             .AddSingleton<IChapterRepository, ChapterRepository>()
-            
+            .AddScoped<IChapterQueueProcessor, ChapterQueueProcessor>()
             .BuildServiceProvider();
 
-        
-
-        NovelParameters myParameters = new NovelParameters();
-        SplitterStatus splitterStatus = new SplitterStatus();
-        Processor NovelProcessor = new Processor(myParameters, splitterStatus);
-        await NovelProcessor.ProcessText();
+        // App Run
+        IChapterQueueProcessor processor = serviceProvider.GetService<IChapterQueueProcessor>();
+        processor.NovelId = 1;
+        await processor.ProcessChapterQueue();
     }
+
+   
+
+    
 }
-
-
-

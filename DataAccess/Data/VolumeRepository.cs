@@ -24,11 +24,17 @@ namespace DataAccess.Data
             return await db.QueryAsync<VolumeModel>("SELECT * FROM volumes WHERE novel_id = @NovelId", new { NovelId = novelId });
         }
 
+        public async Task<VolumeModel?> GetByVolumeNumberAsync(int volumeNumber)
+        {
+            using var db = _dbFactory.CreateConnection();
+            return await db.QueryFirstOrDefaultAsync<VolumeModel>("SELECT * FROM volumes WHERE volume_number = @volume_number", new { Volume_Number = volumeNumber });
+        }
+
         public async Task<int> InsertAsync(VolumeModel volume)
         {
             using var db = _dbFactory.CreateConnection();
-            string query = "INSERT INTO volumes (novel_id, title, volume_number, description) VALUES (@NovelId, @Title, @VolumeNumber, @Description)";
-            return await db.ExecuteAsync(query, volume);
+            string query = "INSERT INTO volumes (novel_id, title, volume_number, description) VALUES (@Novel_Id, @Title, @Volume_Number, @Description); SELECT LAST_INSERT_ID();";
+            return await db.ExecuteScalarAsync<int>(query, volume);
         }
 
         public async Task<int> UpdateAsync(VolumeModel volume)

@@ -8,10 +8,10 @@ namespace DataAccess.Models
 {
     public class VolumeModel
     {
-        public int VolumeId { get; set; }
-        public int NovelId { get; set; }
+        public int Volume_Id { get; set; }
+        public int Novel_Id { get; set; }
         public string Title { get; set; }
-        public int? VolumeNumber { get; set; }
+        public int? Volume_Number { get; set; }
         public string Description { get; set; }
     }
 }
