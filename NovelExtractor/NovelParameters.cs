@@ -10,10 +10,10 @@ namespace NovelExtractor
     {
         //Sample data
         public string NovelPath = "F:\\Arankparty";
-        public  string NovelFileName = "novel.txt";
+        public  string NovelFileName = "novelSpaCand.txt";
         public string OutputDirectory = "F:\\Arankparty\\output";
-        public  string ChapterSplitterText = "valhallatls.blogspot.com";
-        public string ChapterEndingTextPattern = @"^-{5,}";
+        public  string ChapterSplitterText = "adventureworkstl.fyi";
+        public string ChapterEndingTextPattern = @"^#{4,}";
         public  int StartChaptersAt = 1;
         public int StartVolumeAt = 1;
         public string VolumePattern = @"^VOLUME \d+";

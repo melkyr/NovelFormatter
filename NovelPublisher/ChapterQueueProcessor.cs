@@ -126,8 +126,10 @@ namespace NovelPublisher
             }
             data.Title = $"{args.RoutingKey}";
             data.ContentPlain = args.Message;
-            data.ContentHtml = generateHtml(args.Message);
-            data.ContentBulma = generateStyledHtml(args.Message);
+            data.ContentHtml= HtmlConverter.GeneratePlainHtml(args.Message);
+            data.ContentBulma= HtmlConverter.GenerateStyledHtml(args.Message);
+            //data.ContentHtml = generateHtml(args.Message);
+            //data.ContentBulma = generateStyledHtml(args.Message);
             data.NovelId = NovelId;
             data.ChapterNumber = chapter;
             data.VolumeId = volumeId;
@@ -143,7 +145,8 @@ namespace NovelPublisher
             text = Regex.Replace(text, @"(?<=^|\n)(.*?\(.*?\))", "<blockquote class=\"notification is-light\">$1</blockquote>");
 
             // Convert character names into <span class="tag is-info">
-            text = Regex.Replace(text, @"\b(Marina|Silk|Rain|Yuki|Ferdio)\b", "<span class=\"tag is-info\">$1</span>");
+            text = Regex.Replace(text, @"\b(Saga|Abuelo de Silk|Acechador de Sombras|Anciano Elran|Anciano de los elfos|Bandido|Baron Gato|Barry|Barón Gato Tsomi|Benwood|Besio Salas|Biblion|Big Rod|Bran|Bran Crowder|Butlers|Caballero sin nombre|Camilla|Cangrejo de Acero|Capitán Jules|Capitán Jules Stien|Captain Jules|Carmine|Cazador Sombrío|Clover|Conde de Crowder|Condesa Crowder|Cronie A|Dimwit|Dorcas|Dormer|Dragón|Dryad|Dulcus|El mago sin nombre|Elder Elran|Elfos Oscuros|Elran|Feldio|Ferdio|Freia|Full Bound|Fullama|Glad Shi-Im|Glad-Shi-Im|Gold|Gopro-kun|Gopro-kun G|Gruntsblow|Guardias Salmutarianos|Guildmaster|Huevo Andante|Ilwen|Ilwen Pearlwood|Jamie|King Vordan|Lalm|Lefty Hand|Lizard|Loge|Lord Feldio|Lucent|Lun|Lung|Líder de los bandidos|Maid|Maje|Malignant|Malignant the Defiler|Mamal-san|Mamaru|Mamaru|Mamaru-san|Manauela|Manuela|Mapara|Marignant|Marina|Marona|Marqués|Marqués Bedivoir|Marqués de Bedivere|Mastoma|Mastoma-sama|Mayordomo|Mazaara|Mejaluna|Mieche|Miembros de Clover|Miriam|Mob A|Mobs A-D|Moriah|Mujer welmeriana|Nene|Nibelun|Nibelung|Nibelung|One Gold|Padre de Ilwen|Pale Undead King|Patriarca|Persephone|Personal del gremio|Perséfone|Prince Mastoma|Prince Rahma|Prince Rahuma|Príncipe Mastoma|Príncipe Mastoma|Príncipe Rahma|Príncipe Salmutaria|Rafael|Rahma|Rahuma|Rain|Rain|Rain|Rain|Reynise|Rey|Rey Pálido No Muerto|Rey Vaudan|Rey Vincent|Rey Vincent|Rey Vincent V|Rey Vincent V de Wellmeria|Rey Vordan|Rey de Welmeria|Rey del Trono|Reynise|Reynise|Rooge|Saga|Saga|Saga Ferdio|Scordia|Sensei|Shadow Stalker|Shadow Stalkers|Silk|Silk Amberwood|Simon|Simon Barkley|Sir Feldio|Sirviente sombrío de Ilwen|Skordia|Sohar|Soldado|Soldado Elfo Oscuro|Steel Crab|Stinger Joe|Thunder Pike|Thunderpike|Trent|Tymus|Tío Saga|Uno Dorado|Vibrion|Viktor|Vincent|Vincent V|Visconde Boardman|Vizconde Boardman|Vordan|Walkers|Wellmeria|Wilson|Yuke|Yuke Feldio|Yuki|Yuki Ferdio|Zaccardo|Zagnar|Zarnag
+)\b", "<span class=\"tag is-info\">$1</span>");
 
             // Wrap paragraphs in <p class="content">
             text = Regex.Replace(text, @"(\n\s*\n)", "</p><p class=\"content\">");
@@ -167,7 +170,8 @@ namespace NovelPublisher
             text = Regex.Replace(text, @"(?<=^|\n)(.*?\(.*?\))", "<blockquote>$1</blockquote>");
 
             // Convert character names into <strong>
-            text = Regex.Replace(text, @"\b(Marina|Silk|Rain|Yuki|Ferdio)\b", "<strong>$1</strong>");
+            text = Regex.Replace(text, @"\b(Saga|Abuelo de Silk|Acechador de Sombras|Anciano Elran|Anciano de los elfos|Bandido|Baron Gato|Barry|Barón Gato Tsomi|Benwood|Besio Salas|Biblion|Big Rod|Bran|Bran Crowder|Butlers|Caballero sin nombre|Camilla|Cangrejo de Acero|Capitán Jules|Capitán Jules Stien|Captain Jules|Carmine|Cazador Sombrío|Clover|Conde de Crowder|Condesa Crowder|Cronie A|Dimwit|Dorcas|Dormer|Dragón|Dryad|Dulcus|El mago sin nombre|Elder Elran|Elfos Oscuros|Elran|Feldio|Ferdio|Freia|Full Bound|Fullama|Glad Shi-Im|Glad-Shi-Im|Gold|Gopro-kun|Gopro-kun G|Gruntsblow|Guardias Salmutarianos|Guildmaster|Huevo Andante|Ilwen|Ilwen Pearlwood|Jamie|King Vordan|Lalm|Lefty Hand|Lizard|Loge|Lord Feldio|Lucent|Lun|Lung|Líder de los bandidos|Maid|Maje|Malignant|Malignant the Defiler|Mamal-san|Mamaru|Mamaru|Mamaru-san|Manauela|Manuela|Mapara|Marignant|Marina|Marona|Marqués|Marqués Bedivoir|Marqués de Bedivere|Mastoma|Mastoma-sama|Mayordomo|Mazaara|Mejaluna|Mieche|Miembros de Clover|Miriam|Mob A|Mobs A-D|Moriah|Mujer welmeriana|Nene|Nibelun|Nibelung|Nibelung|One Gold|Padre de Ilwen|Pale Undead King|Patriarca|Persephone|Personal del gremio|Perséfone|Prince Mastoma|Prince Rahma|Prince Rahuma|Príncipe Mastoma|Príncipe Mastoma|Príncipe Rahma|Príncipe Salmutaria|Rafael|Rahma|Rahuma|Rain|Rain|Rain|Rain|Reynise|Rey|Rey Pálido No Muerto|Rey Vaudan|Rey Vincent|Rey Vincent|Rey Vincent V|Rey Vincent V de Wellmeria|Rey Vordan|Rey de Welmeria|Rey del Trono|Reynise|Reynise|Rooge|Saga|Saga|Saga Ferdio|Scordia|Sensei|Shadow Stalker|Shadow Stalkers|Silk|Silk Amberwood|Simon|Simon Barkley|Sir Feldio|Sirviente sombrío de Ilwen|Skordia|Sohar|Soldado|Soldado Elfo Oscuro|Steel Crab|Stinger Joe|Thunder Pike|Thunderpike|Trent|Tymus|Tío Saga|Uno Dorado|Vibrion|Viktor|Vincent|Vincent V|Visconde Boardman|Vizconde Boardman|Vordan|Walkers|Wellmeria|Wilson|Yuke|Yuke Feldio|Yuki|Yuki Ferdio|Zaccardo|Zagnar|Zarnag
+)\b", "<strong>$1</strong>");
 
             // Wrap paragraphs in <p>
             text = Regex.Replace(text, @"(\n\s*\n)", "</p><p>");

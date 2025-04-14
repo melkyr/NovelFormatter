@@ -1,0 +1,28 @@
+
+{{ define "title" }}Table of Contents{{ end }}
+
+{{ define "content" }}
+    <h1>Table of Contents</h1>
+
+    {{ if not .Novels }}
+        <p>No novels found.</p>
+    {{ else }}
+         {{ range .Novels }}
+			{{ $novelSlug := .Slug }} {{/* Store slug in a variable */}}
+			<section class="novel-toc" style="margin-bottom: 2em;">
+				<h2>{{ .Name }}</h2>
+				<ul>
+					{{ range .Chapters }}
+						<li>
+							Vol. {{ .VolumeNumber }} Ch. {{ .ChapterNumber }}:
+							<a href="{{ $novelSlug }}/{{ .FilenameHTML }}">Plain HTML</a> |
+							<a href="{{ $novelSlug }}/{{ .FilenameBulma }}">Styled (Bulma)</a>
+						</li>
+					{{ end }} {{/* End range .Chapters */}}
+				</ul>
+			</section>
+		{{ end }} {{/* End range .Novels */}}
+    {{ end }}
+{{ end }}
+
+

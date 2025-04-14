@@ -1,0 +1,49 @@
+
+
+{{ define "title" }}{{ .NovelName }} - Vol. {{ .Current.VolumeNumber }} Ch. {{ .Current.ChapterNumber }}{{ end }}
+
+{{ define "content" }}
+    <nav aria-label="chapter navigation" style="margin-bottom: 2em;">
+        <a href="{{ .SiteBasePath }}index.html">Table of Contents</a> |
+        <span>{{ .NovelName }} - Vol. {{ .Current.VolumeNumber }} Ch. {{ .Current.ChapterNumber }}</span>
+    </nav>
+
+    {{/* ======================================= */}}
+    {{/* == VITAL: Output Chapter Content START == */}}
+    {{/* ======================================= */}}
+    {{ if .IsBulmaStyled }}
+        {{ .Current.ContentBulma }} {{/* Output Bulma content */}}
+    {{ else }}
+        {{ .Current.ContentHTML }}  {{/* Output Plain HTML content */}}
+    {{ end }}
+    {{/* ======================================= */}}
+    {{/* == VITAL: Output Chapter Content END ==   */}}
+    {{/* ======================================= */}}
+
+    <nav aria-label="Previous/Next chapter" style="margin-top: 2em; padding-top: 1em; border-top: 1px solid #eee;">
+        {{/* Adjust Prev/Next links to show volume too if desired */}}
+        {{ if .Current.PrevChapter }}
+            {{ $prev := .Current.PrevChapter }} {{/* Variable for cleaner access */}}
+            {{ if $.IsBulmaStyled }}
+                <a href="{{ $prev.FilenameBulma }}" class="button is-link">&laquo; Prev (V{{ $prev.VolumeNumber }} C{{ $prev.ChapterNumber }})</a>
+            {{ else }}
+                <a href="{{ $prev.FilenameHTML }}">&laquo; Prev (V{{ $prev.VolumeNumber }} C{{ $prev.ChapterNumber }})</a>
+            {{ end }}
+        {{ else }}
+            <span>&laquo; Previous Chapter (None)</span>
+        {{ end }}
+
+        <span style="margin: 0 1em;">|</span> {{/* Separator */}}
+
+        {{ if .Current.NextChapter }}
+             {{ $next := .Current.NextChapter }} {{/* Variable for cleaner access */}}
+             {{ if $.IsBulmaStyled }}
+                <a href="{{ $next.FilenameBulma }}" class="button is-link">Next (V{{ $next.VolumeNumber }} C{{ $next.ChapterNumber }}) &raquo;</a>
+            {{ else }}
+                 <a href="{{ $next.FilenameHTML }}">Next (V{{ $next.VolumeNumber }} C{{ $next.ChapterNumber }}) &raquo;</a>
+             {{ end }}
+        {{ else }}
+            <span>Next Chapter (None) &raquo;</span>
+        {{ end }}
+    </nav>
+{{ end }}
