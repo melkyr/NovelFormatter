@@ -34,7 +34,7 @@ public class Program
 
         // App Run
         IChapterQueueProcessor processor = serviceProvider.GetService<IChapterQueueProcessor>();
-        processor.NovelId = 2;
+        processor.NovelId = 3;
         await processor.ProcessChapterQueue();
     }
 
